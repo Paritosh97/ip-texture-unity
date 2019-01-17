@@ -4,4 +4,13 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/splash.unity
+    guid: be7f55ecf2bc71946991f397bf3e25f9
+  - enabled: 1
+    path: Assets/Scenes/VideoModeReceive.unity
+    guid: ff01ab6d23d8b4046ad593726f7fd70f
+  - enabled: 1
+    path: Assets/Scenes/VideoModeSend.unity
+    guid: 9a040ef514ba3ab4fa433053df934bb1
