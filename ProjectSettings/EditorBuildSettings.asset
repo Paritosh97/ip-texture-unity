@@ -17,3 +17,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/share.unity
     guid: 740855d34132a7a4e86377143c3bfb1a
+  - enabled: 1
+    path: Assets/Scenes/WebcamModeRecieve.unity
+    guid: 61ca7868e7f023946988bdb408e8a340
+  - enabled: 1
+    path: Assets/Scenes/WebcamModeSend.unity
+    guid: df5273699b0e99747a4fd0db8a0bb9f1

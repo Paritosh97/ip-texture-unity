@@ -8,8 +8,15 @@ public class CaptureImageScript : MonoBehaviour {
 
     public RawImage rawImage;
 
+    public GameObject receiver;
+
     public static string filePath;
     public static Texture rawTexture;
+
+    void Start()
+    {
+        receiver.GetComponent<TextureSendReceive.TextureReceiver>().IP = ButtonScript.ip_addr;
+    }
 
     public void imageCapture()
     {

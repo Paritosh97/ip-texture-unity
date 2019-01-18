@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace TextureSendReceive {
 	public class TextureReceiver : _TextureReceiver {
-		// Use this class, not the base
-	}
+        // Use this class, not the base
+    }
 
 }
