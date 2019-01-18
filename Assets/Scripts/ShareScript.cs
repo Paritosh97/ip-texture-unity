@@ -5,81 +5,29 @@ using UnityEngine.UI;
 
 public class ShareScript : MonoBehaviour
 {
-    public Button shareButton;
-
-    private bool isFocus = false;
-
+    public RawImage displayImage;
     private string shareSubject, shareMessage;
-    private bool isProcessing = false;
-    private string imageName;
-
+    
     void Start()
     {
-        shareButton.onClick.AddListener(OnShareButtonClick);
-    }
-
-
-    void OnApplicationFocus(bool focus)
-    {
-        isFocus = focus;
+        displayImage.texture = CaptureImageScript.rawTexture;
     }
 
     public void OnShareButtonClick()
     {
-
-        imageName = CaptureImageScript.filename;
         shareSubject = "Here's the captured image";
         shareMessage = "Here's the captured image." ;
-        ShareImage();
+        StartCoroutine(ShareImage());
     }
 
-
-    private void ShareImage()
+    private IEnumerator ShareImage()
     {
+        yield return new WaitForEndOfFrame();
 
-#if UNITY_ANDROID
-		if (!isProcessing) {
-			StartCoroutine (ShareImageInAnroid ());
-		}
+        new NativeShare().AddFile(CaptureImageScript.filePath).SetSubject(shareSubject).SetText(shareMessage).Share();
 
-#else
-        Debug.Log("No sharing set up for this platform.");
-#endif
+        // Share on WhatsApp only, if installed (Android only)
+        if( NativeShare.TargetExists( "com.whatsapp" ) )
+            new NativeShare().AddFile(CaptureImageScript.filePath).SetText( "Hello world!" ).SetTarget( "com.whatsapp" ).Share();
     }
-
-#if UNITY_ANDROID
-	public IEnumerator ShareImageInAnroid () {
-
-		isProcessing = true;
-		// wait for graphics to render
-		yield return new WaitForEndOfFrame ();
-
-		string imagePath = Application.persistentDataPath + "/" + imageName;
-
-		if (!Application.isEditor) {
-			//Create intent for action send
-			AndroidJavaClass intentClass = new AndroidJavaClass ("android.content.Intent");
-			AndroidJavaObject intentObject = new AndroidJavaObject ("android.content.Intent");
-			intentObject.Call<AndroidJavaObject> ("setAction", intentClass.GetStatic<string> ("ACTION_SEND"));
-
-			//create image URI to add it to the intent
-			AndroidJavaClass uriClass = new AndroidJavaClass ("android.net.Uri");
-			AndroidJavaObject uriObject = uriClass.CallStatic<AndroidJavaObject> ("parse", "file://" + imagePath);
-
-			//put image and string extra
-			intentObject.Call<AndroidJavaObject> ("putExtra", intentClass.GetStatic<string> ("EXTRA_STREAM"), uriObject);
-			intentObject.Call<AndroidJavaObject> ("setType", "image/png");
-			intentObject.Call<AndroidJavaObject> ("putExtra", intentClass.GetStatic<string> ("EXTRA_SUBJECT"), shareSubject);
-			intentObject.Call<AndroidJavaObject> ("putExtra", intentClass.GetStatic<string> ("EXTRA_TEXT"), shareMessage);
-
-			AndroidJavaClass unity = new AndroidJavaClass ("com.unity3d.player.UnityPlayer");
-			AndroidJavaObject currentActivity = unity.GetStatic<AndroidJavaObject> ("currentActivity");
-			AndroidJavaObject chooser = intentClass.CallStatic<AndroidJavaObject> ("createChooser", intentObject, "Share your high score");
-			currentActivity.Call ("startActivity", chooser);
-		}
-
-		yield return new WaitUntil (() => isFocus);
-		isProcessing = false;
-	}
-#endif
 }
