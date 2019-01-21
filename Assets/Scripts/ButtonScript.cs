@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class ButtonScript : MonoBehaviour {
 
+    [HideInInspector]
     public Text ipText;
 
     public static string ip_addr;
